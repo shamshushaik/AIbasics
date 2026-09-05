@@ -4,6 +4,9 @@ import confetti from "canvas-confetti";
 import { getLesson, neighbors, navigate, usePrefersReducedMotion, type Progress } from "../lib/store";
 import { DEEP } from "../data";
 import { RenderBlock, Icon } from "./ui";
+import { DESI } from "../data/desi";
+import { LIVE } from "../data/live";
+import { InShort, DesiCard, LiveConsole, ConceptFlow, BitHeading } from "./livebits";
 import { Diagram } from "./diagrams";
 
 const ease = [0.22, 1, 0.36, 1] as const;
@@ -240,7 +243,10 @@ function Toc({ active, accent }: { active: string; accent: string }) {
   const items = [
     ["hook", "in plain words", "book"],
     ["core", "the lesson", "chip"],
+    ["order", "in order", "layers"],
     ["worked", "worked example", "terminal"],
+    ["picture", "picture this", "target"],
+    ["live", "try it live", "bolt"],
     ["mistakes", "mistakes to avoid", "bug"],
     ["takeaways", "key takeaways", "check"],
     ["faq", "beginner faq", "search"],
@@ -253,14 +259,21 @@ function Toc({ active, accent }: { active: string; accent: string }) {
       <ul className="space-y-1 border-l border-line-2">
         {items.map(([id, label, icon]) => (
           <li key={id}>
-            <a href={`#${id}`}
-              className={`flex items-center gap-2.5 py-1.5 pl-4 font-mono text-[12px] transition-all ${
+            <button
+              onClick={() => {
+                const el = document.getElementById(id);
+                if (el) {
+                  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+                  el.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+                }
+              }}
+              className={`flex w-full items-center gap-2.5 py-1.5 pl-4 text-left font-mono text-[12px] transition-all ${
                 active === id ? "font-semibold" : "text-ink-3 hover:text-ink-2"
               }`}
               style={active === id ? { color: accent, borderLeft: `2px solid ${accent}`, marginLeft: -1 } : { marginLeft: -1, borderLeft: "2px solid transparent" }}>
               <Icon name={icon} size={13} />
               {label}
-            </a>
+            </button>
           </li>
         ))}
       </ul>
@@ -295,7 +308,7 @@ export function LessonPage({ id, progress }: { id: string; progress: Progress })
   }, [id]);
 
   useEffect(() => {
-    const ids = ["hook", "core", "worked", "mistakes", "takeaways", "faq", "quiz", "labs"];
+    const ids = ["hook", "core", "order", "worked", "picture", "live", "mistakes", "takeaways", "faq", "quiz", "labs"];
     const obs = new IntersectionObserver(
       (entries) => {
         for (const e of entries) if (e.isIntersecting) setActive(e.target.id);
@@ -345,6 +358,8 @@ export function LessonPage({ id, progress }: { id: string; progress: Progress })
                   [`${lesson.minutes} min read`, "gauge"],
                   [`${lesson.quiz.length}-question checkpoint`, "check"],
                   [`${lesson.practice.length} lab tasks`, "flask"],
+                  ["live console", "terminal"] as [string, string],
+                  ["picture this · desi", "target"] as [string, string],
                   ...(deep?.diagram ? [["interactive diagram", "chip"] as [string, string]] : []),
                 ].map(([t, ic]) => (
                   <span key={t} className="flex items-center gap-2 border border-line-2 bg-card px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.12em] text-ink-2" style={{ borderRadius: 6 }}>
@@ -366,6 +381,9 @@ export function LessonPage({ id, progress }: { id: string; progress: Progress })
           <aside className="lg:col-span-3"><Toc active={active} accent={accent} /></aside>
 
           <article ref={artRef} className="lg:col-span-9">
+            {/* easy-english one-liner */}
+            {DESI[lesson.id] && <InShort text={DESI[lesson.id].short} accent={accent} />}
+
             {/* hook */}
             {deep && (
               <section>
@@ -385,8 +403,24 @@ export function LessonPage({ id, progress }: { id: string; progress: Progress })
               <SecHead id="core" icon="chip" kicker="the full picture" title="The lesson" accent={accent} />
               {deep?.diagram && <Diagram name={deep.diagram} />}
               <div className="prose-lesson">
-                {lesson.blocks.map((b, i) => <RenderBlock key={i} block={b} accent={accent} />)}
+                {lesson.blocks.map((b, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-30px" }}
+                    transition={{ duration: 0.5, delay: (i % 4) * 0.06, ease }}
+                  >
+                    <RenderBlock block={b} accent={accent} />
+                  </motion.div>
+                ))}
               </div>
+            </section>
+
+            {/* in order — animated flow of the key ideas */}
+            <section id="order">
+              <BitHeading kicker="the whole lesson in 3 beats" title="Remember it in order" accent={accent} />
+              <ConceptFlow items={lesson.takeaways.slice(0, 3)} accent={accent} />
             </section>
 
             {/* worked */}
@@ -394,6 +428,21 @@ export function LessonPage({ id, progress }: { id: string; progress: Progress })
               <section>
                 <SecHead id="worked" icon="terminal" kicker="follow along" title="Worked example" accent={accent} />
                 <WorkedStepper title={deep.worked.title} steps={deep.worked.steps} accent={accent} />
+              </section>
+            )}
+
+            {/* picture this — desi real-life example */}
+            {DESI[lesson.id] && (
+              <section id="picture">
+                <DesiCard desi={DESI[lesson.id]} accent={accent} />
+              </section>
+            )}
+
+            {/* try it live — simulated real console */}
+            {LIVE[lesson.id] && (
+              <section id="live">
+                <BitHeading kicker="real command, real-looking output" title="Try it live" accent={accent} />
+                <LiveConsole live={LIVE[lesson.id]} accent={accent} />
               </section>
             )}
 

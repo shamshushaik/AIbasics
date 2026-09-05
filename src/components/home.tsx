@@ -4,6 +4,7 @@ import { navigate, useCountUp, usePrefersReducedMotion, moduleProgress, FLAT, TO
 import { MODULES, TOTAL_QUIZ, TOTAL_PRACTICE, TOTAL_MINUTES, TOTAL_SECTIONS, START_HERE } from "../data";
 import { FloatingGlyphs, Ticker } from "./chrome";
 import { Diagram } from "./diagrams";
+import { Icon } from "./ui";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -401,6 +402,88 @@ const LOOP = [
   { k: "04", t: "Repeat", d: "78 lessons later, you speak fluent model — and you can prove it.", c: "var(--color-glow)" },
 ];
 
+/* ---------------- anatomy: what's inside every lesson ---------------- */
+
+const ANATOMY = [
+  { icon: "book", title: "“In short” — zero jargon", desc: "Every lesson opens with the whole idea in one plain-English line, before any theory.", stat: "78 intros" },
+  { icon: "chip", title: "Diagrams you can poke", desc: "Token streams, neural nets, attention heatmaps — interactive, not screenshots.", stat: "8 interactives" },
+  { icon: "layers", title: "Remember it in order", desc: "The lesson's three key ideas as an animated flow — beats, not bullet points.", stat: "78 flows" },
+  { icon: "target", title: "Picture this · desi edition", desc: "Every concept re-told with Swiggy, IRCTC tatkal, UPI, IPL and your chai break.", stat: "78 real-life scenes" },
+  { icon: "terminal", title: "Try it live", desc: "A simulated console types a real command and streams real-looking output as you watch.", stat: "78 consoles" },
+  { icon: "gauge", title: "Prove it stuck", desc: "Checkpoint quiz with PASS/partial/FAIL, explanations, confetti — and a lab bench to run.", stat: `${TOTAL_QUIZ} questions · ${TOTAL_PRACTICE} lab tasks` },
+];
+
+function AnatomyBand() {
+  return (
+    <section className="relative border-y border-line bg-panel-2/40 py-24">
+      <div className="absolute inset-0 grid-paper opacity-40" />
+      <div className="relative mx-auto grid max-w-7xl gap-14 px-5 lg:grid-cols-12 lg:px-8">
+        <div className="lg:col-span-5">
+          <div className="lg:sticky lg:top-28">
+            <SectionHead kicker="inside every lesson" accent="var(--color-glow)" title={<>Never just<br />a wall of text.</>} />
+            <motion.p
+              initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.55, ease }}
+              className="mt-5 max-w-md text-[16px] leading-relaxed text-ink-2"
+            >
+              Each of the 78 lessons is a small workshop: you read it in easy English, watch it move,
+              relate it to your daily life, run a real command — then prove you got it. Six living
+              parts, every single lesson.
+            </motion.p>
+            <motion.div
+              initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.55, delay: 0.1, ease }}
+              className="mt-7 flex flex-wrap gap-2.5"
+            >
+              {["78 × 6 parts", "470+ interactive moments", "0 walls of text"].map((t) => (
+                <span key={t} className="border border-line-2 bg-card px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-2" style={{ borderRadius: 6 }}>
+                  {t}
+                </span>
+              ))}
+            </motion.div>
+            <motion.button
+              initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.2 }}
+              onClick={() => navigate("/lesson/what-is-ai")}
+              className="link-slide mt-8 flex items-center gap-2 font-mono text-[13px] font-semibold text-glow"
+            >
+              see all six in lesson 01 <Icon name="arrow" size={15} />
+            </motion.button>
+          </div>
+        </div>
+        <div className="relative lg:col-span-7">
+          <span className="absolute left-[21px] top-2 bottom-2 hidden w-px sm:block" aria-hidden="true">
+            <svg width="2" height="100%" preserveAspectRatio="none">
+              <line x1="1" y1="0" x2="1" y2="100%" stroke="var(--color-line-2)" strokeWidth="2" className="dash-flow" />
+            </svg>
+          </span>
+          <ul className="space-y-4">
+            {ANATOMY.map((a, i) => (
+              <motion.li
+                key={a.title}
+                initial={{ opacity: 0, x: 26 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.55, delay: i * 0.07, ease }}
+                className="group relative flex items-start gap-5 rounded-lg border border-line-2 bg-card p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-glow/50 hover:shadow-press-sm sm:p-6"
+              >
+                <span className="relative z-10 grid h-11 w-11 shrink-0 place-items-center rounded-md border border-line-2 bg-panel text-glow transition-all duration-300 group-hover:border-glow group-hover:shadow-[0_0_18px_-2px_rgba(126,226,168,0.5)]">
+                  <Icon name={a.icon} size={19} />
+                </span>
+                <div className="min-w-0">
+                  <p className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                    <span className="font-mono text-[11px] font-bold text-ink-3">0{i + 1}</span>
+                    <span className="font-display text-[18px] font-bold text-ink transition-colors group-hover:text-glow">{a.title}</span>
+                  </p>
+                  <p className="mt-1 text-[14.5px] leading-relaxed text-ink-2">{a.desc}</p>
+                  <p className="mt-2 font-mono text-[10.5px] uppercase tracking-[0.18em] text-glow/80">{a.stat}</p>
+                </div>
+              </motion.li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function StudyLoop() {
   return (
     <section className="mx-auto max-w-7xl px-5 py-24 lg:px-8">
@@ -569,6 +652,7 @@ export function HomePage({ progress }: { progress: Progress }) {
       <Ticker />
       <ModuleBento progress={progress} />
       <DiagramWall />
+      <AnatomyBand />
       <StudyLoop />
       <Translation />
       <Warmup />

@@ -109,6 +109,13 @@ body {
   animation: float-soft 7s ease-in-out infinite;
 }
 
+/* ---------- live console status dot ---------- */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.7); }
+}
+.pulse-dot { animation: pulse-dot 1.5s ease-in-out infinite; }
+
 /* ---------- animated dashed connectors ---------- */
 @keyframes dash-flow {
   to { stroke-dashoffset: -24; }
