@@ -1,8 +1,15 @@
-import type { ModuleDef } from "./types";
+import type { DeepContent, ModuleDef } from "./types";
 import { MODULE1_SECTIONS } from "./module1";
 import { MODULE2_SECTIONS } from "./module2";
 import { MODULE3_SECTIONS } from "./module3";
 import { MODULE4_SECTIONS } from "./module4";
+import { DEEP1 } from "./deep1";
+import { DEEP2 } from "./deep2";
+import { DEEP3 } from "./deep3";
+import { DEEP4 } from "./deep4";
+
+/** Beginner deep-dive layer (hooks, worked examples, mistakes, FAQs) for every lesson. */
+export const DEEP: Record<string, DeepContent> = { ...DEEP1, ...DEEP2, ...DEEP3, ...DEEP4 };
 
 export const MODULES: ModuleDef[] = [
   {

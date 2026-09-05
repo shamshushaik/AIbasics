@@ -2,34 +2,51 @@ export type Block =
   | { kind: "p"; text: string }
   | { kind: "h"; text: string }
   | { kind: "ul"; items: string[] }
-  | { kind: "code"; lang: string; title?: string; code: string }
-  | { kind: "callout"; tone: "lab" | "tip" | "warn"; title: string; text: string }
+  | { kind: "code"; lang?: string; title?: string; code: string }
+  | { kind: "callout"; tone?: "tip" | "warn" | "lab"; title?: string; text: string }
   | { kind: "table"; head: string[]; rows: string[][] };
 
-export interface Quiz {
-  q: string;
-  options: string[];
-  answer: number;
-  explain: string;
-}
+export type Quiz = { q: string; options: string[]; answer: number; explain: string };
 
-export interface Lesson {
+export type DiagramName =
+  | "tokens"
+  | "neural"
+  | "split"
+  | "confusion"
+  | "temperature"
+  | "context"
+  | "attention"
+  | "pipeline";
+
+/** Beginner deep-dive layer attached to every lesson. */
+export type DeepContent = {
+  /** Plain-words analogy hook — the "aha" before the theory. */
+  hook: string;
+  /** Optional interactive diagram rendered inside the lesson. */
+  diagram?: DiagramName;
+  /** Step-by-step worked example a beginner can follow end to end. */
+  worked: { title: string; steps: { head: string; body: string }[] };
+  /** Classic beginner mistakes: wrong move → right move → why. */
+  mistakes: { wrong: string; right: string; why: string }[];
+  /** Questions every beginner asks. */
+  faq: { q: string; a: string }[];
+};
+
+export type Lesson = {
   id: string;
   title: string;
-  minutes: number;
   summary: string;
+  minutes: number;
   blocks: Block[];
   takeaways: string[];
-  practice: string[];
+  testerAngle?: string;
   quiz: Quiz[];
-}
+  practice: string[];
+};
 
-export interface Section {
-  title: string;
-  lessons: Lesson[];
-}
+export type Section = { title: string; lessons: Lesson[] };
 
-export interface ModuleDef {
+export type ModuleDef = {
   code: string;
   num: number;
   title: string;
@@ -38,9 +55,9 @@ export interface ModuleDef {
   accentSoft: string;
   description: string;
   sections: Section[];
-}
+};
 
-export interface FlatLesson extends Lesson {
+export type FlatLesson = Lesson & {
   number: number;
   moduleCode: string;
   moduleNum: number;
@@ -48,4 +65,4 @@ export interface FlatLesson extends Lesson {
   accent: string;
   accentSoft: string;
   sectionTitle: string;
-}
+};

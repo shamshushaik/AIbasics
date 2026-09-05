@@ -61,7 +61,7 @@ export function CurriculumPage({ progress, initialModule }: { progress: Progress
               The Curriculum<span className="text-m2">.</span>
             </h1>
             <p className="max-w-md text-[15px] leading-relaxed text-ink-2">
-              78 specs across 22 sections. Filter by module, search any term — try <em className="font-mono text-[13px] text-ink">drift</em>, <em className="font-mono text-[13px] text-ink">few-shot</em> or <em className="font-mono text-[13px] text-ink">drift</em>'s cousin <em className="font-mono text-[13px] text-ink">bias</em>. Press <kbd className="border border-ink/25 bg-card px-1.5 py-0.5 font-mono text-[11px]">/</kbd> to search.
+              78 specs across 22 sections. Filter by module, search any term — try <em className="font-mono text-[13px] text-ink">drift</em>, <em className="font-mono text-[13px] text-ink">few-shot</em> or <em className="font-mono text-[13px] text-ink">quantization</em>. Press <kbd className="border border-ink/25 bg-card px-1.5 py-0.5 font-mono text-[11px]">/</kbd> to search.
             </p>
           </div>
         </Reveal>
@@ -158,7 +158,7 @@ export function CurriculumPage({ progress, initialModule }: { progress: Progress
                         <span className="flex flex-wrap items-center gap-3">
                           <span className="font-display text-[21px] font-bold tracking-tight sm:text-2xl">{m.title}</span>
                           <Badge color={m.accent} soft={m.accentSoft}>{lessons} lessons</Badge>
-                          {p.pct === 100 && <Badge color="var(--color-pass)" soft="rgba(47,158,68,0.12)">✓ complete</Badge>}
+                          {p.pct === 100 && <Badge color="var(--color-pass)" soft="rgba(74,222,128,0.13)">✓ complete</Badge>}
                         </span>
                         <span className="mt-2.5 flex max-w-md items-center gap-3">
                           <span className="w-full"><Bar pct={p.pct} color={m.accent} h={5} /></span>

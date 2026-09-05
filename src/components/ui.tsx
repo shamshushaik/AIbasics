@@ -12,7 +12,7 @@ const S = {
   strokeLinejoin: "round" as const,
 };
 
-export function Icon({ name, size = 18 }: { name: string; size?: number }) {
+export function Icon({ name, size = 18, className }: { name: string; size?: number; className?: string }) {
   const paths: Record<string, ReactNode> = {
     logo: (
       <>
@@ -199,7 +199,7 @@ export function Ring({ pct, color, size = 54 }: { pct: number; color: string; si
   const c = 2 * Math.PI * r;
   return (
     <svg width={size} height={size} className="-rotate-90">
-      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(20,24,29,0.12)" strokeWidth="5" />
+      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(237,242,249,0.14)" strokeWidth="5" />
       <motion.circle
         cx={size / 2}
         cy={size / 2}
@@ -220,7 +220,7 @@ export function Ring({ pct, color, size = 54 }: { pct: number; color: string; si
 
 /* ---------------- code block ---------------- */
 
-export function CodeBlock({ code, title, lang }: { code: string; title?: string; lang: string }) {
+export function CodeBlock({ code, title, lang }: { code: string; title?: string; lang?: string }) {
   const [copied, setCopied] = useState(false);
   const copy = async () => {
     try {
@@ -267,8 +267,8 @@ const TONES: Record<string, { color: string; label: string }> = {
   warn: { color: "var(--color-m1)", label: "Watch out" },
 };
 
-export function Callout({ tone, title, text }: { tone: string; title: string; text: string }) {
-  const t = TONES[tone] ?? TONES.tip;
+export function Callout({ tone, title, text }: { tone?: string; title?: string; text: string }) {
+  const t = TONES[tone ?? "tip"] ?? TONES.tip;
   return (
     <div
       className="my-5 border border-ink/10 bg-card p-4 pl-5"

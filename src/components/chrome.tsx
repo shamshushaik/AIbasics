@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { animate, stagger } from "animejs";
 import { navigate, useRoute, useScrolled, usePrefersReducedMotion, TOTAL, type Progress } from "../lib/store";
 import { Icon } from "./ui";
@@ -69,7 +69,7 @@ export function TopBar({ progress }: { progress: Progress }) {
   return (
     <header
       className={`sticky top-0 z-50 border-b transition-all duration-300 ${
-        scrolled ? "border-ink/15 bg-paper/95 shadow-[0_2px_0_rgba(20,24,29,0.06)]" : "border-transparent bg-paper/80"
+        scrolled ? "border-ink/15 bg-paper/90 shadow-[0_10px_40px_-18px_rgba(0,0,0,0.9)]" : "border-transparent bg-paper/70"
       } backdrop-blur-sm`}
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 lg:px-8">
@@ -161,6 +161,12 @@ export function Ticker() {
 /* ---------------- footer ---------------- */
 
 export function Footer({ progress }: { progress: Progress }) {
+  const [armed, setArmed] = useState(false);
+  useEffect(() => {
+    if (!armed) return;
+    const id = setTimeout(() => setArmed(false), 3500);
+    return () => clearTimeout(id);
+  }, [armed]);
   return (
     <footer className="relative mt-24 overflow-hidden border-t-2 border-ink bg-panel text-term">
       <div className="grid-paper-dark noise relative">
@@ -178,11 +184,14 @@ export function Footer({ progress }: { progress: Progress }) {
               <button onClick={() => navigate("/lesson/what-is-ai")} className="link-slide text-term/70 hover:text-glow">start lesson 01</button>
               <button
                 onClick={() => {
-                  if (window.confirm("Reset all progress, quiz scores and practice checkmarks?")) progress.resetAll();
+                  if (armed) {
+                    progress.resetAll();
+                    setArmed(false);
+                  } else setArmed(true);
                 }}
-                className="link-slide text-fail/80 hover:text-fail"
+                className={`link-slide ${armed ? "font-bold text-fail" : "text-fail/80 hover:text-fail"}`}
               >
-                reset progress
+                {armed ? "click again to confirm ✕" : "reset progress"}
               </button>
             </div>
           </div>
