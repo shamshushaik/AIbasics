@@ -1,0 +1,225 @@
+@import "tailwindcss";
+
+@theme {
+  --color-paper: #0c0f15;
+  --color-card: #121722;
+  --color-card-2: #171e2b;
+  --color-ink: #edf2f9;
+  --color-ink-2: #aab6c5;
+  --color-ink-3: #6d7a8c;
+  --color-line: #222b3a;
+  --color-line-2: #2e3a4e;
+  --color-panel: #07090e;
+  --color-panel-2: #0e1219;
+  --color-term: #e6edf3;
+  --color-pass: #4ade80;
+  --color-fail: #fb7185;
+  --color-m1: #ff7a29;
+  --color-m2: #22d3ee;
+  --color-m3: #f472b6;
+  --color-m4: #60a5fa;
+  --color-glow: #7ee2a8;
+
+  --font-display: "Bricolage Grotesque", "IBM Plex Sans", sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-glow);
+  color: #06130b;
+}
+
+/* ---------- layered ambient background ---------- */
+.grid-paper {
+  background-image:
+    linear-gradient(to right, rgba(237, 242, 249, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(237, 242, 249, 0.035) 1px, transparent 1px);
+  background-size: 38px 38px;
+}
+.grid-paper-dark {
+  background-image:
+    linear-gradient(to right, rgba(230, 237, 243, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(230, 237, 243, 0.05) 1px, transparent 1px);
+  background-size: 34px 34px;
+}
+.noise::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.aurora {
+  background:
+    radial-gradient(900px 500px at 12% -5%, rgba(34, 211, 238, 0.13), transparent 60%),
+    radial-gradient(800px 520px at 88% 8%, rgba(255, 122, 41, 0.12), transparent 60%),
+    radial-gradient(1000px 700px at 50% 110%, rgba(244, 114, 182, 0.1), transparent 60%);
+}
+
+/* ---------- ticker ---------- */
+@keyframes ticker-x {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.ticker-track {
+  animation: ticker-x 46s linear infinite;
+}
+.ticker:hover .ticker-track {
+  animation-play-state: paused;
+}
+
+/* ---------- blinking cursor ---------- */
+@keyframes blink-step {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.cursor-blink {
+  animation: blink-step 1s step-end infinite;
+}
+
+/* ---------- scanline sweep on terminal ---------- */
+@keyframes scan-sweep {
+  0% { top: -20%; }
+  100% { top: 120%; }
+}
+.scanline {
+  animation: scan-sweep 5.5s linear infinite;
+}
+
+/* ---------- slow float for ambient bits ---------- */
+@keyframes float-soft {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+.float-soft {
+  animation: float-soft 7s ease-in-out infinite;
+}
+
+/* ---------- live console status dot ---------- */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.7); }
+}
+.pulse-dot { animation: pulse-dot 1.5s ease-in-out infinite; }
+
+/* ---------- animated dashed connectors ---------- */
+@keyframes dash-flow {
+  to { stroke-dashoffset: -24; }
+}
+.dash-flow {
+  stroke-dasharray: 6 6;
+  animation: dash-flow 1.2s linear infinite;
+}
+
+/* ---------- underline slide for links ---------- */
+.link-slide {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 2px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  transition: background-size 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.link-slide:hover {
+  background-size: 100% 2px;
+}
+
+/* ---------- hard offset shadows ---------- */
+.shadow-press {
+  box-shadow: 6px 6px 0 0 rgba(0, 0, 0, 0.5);
+}
+.shadow-press-sm {
+  box-shadow: 3px 3px 0 0 rgba(0, 0, 0, 0.45);
+}
+.glow-ring {
+  box-shadow: 0 0 0 1px rgba(126, 226, 168, 0.25), 0 8px 40px -8px rgba(126, 226, 168, 0.18);
+}
+
+/* ---------- outlined index numbers ---------- */
+.text-outline {
+  -webkit-text-stroke: 1.5px rgba(237, 242, 249, 0.22);
+  color: transparent;
+}
+
+/* ---------- spotlight card (cursor-following glow) ---------- */
+.card-spot {
+  position: relative;
+  overflow: hidden;
+}
+.card-spot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  background: radial-gradient(
+    420px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(126, 226, 168, 0.09),
+    transparent 65%
+  );
+}
+.card-spot:hover::before {
+  opacity: 1;
+}
+
+/* ---------- scrollbars ---------- */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line-2) transparent;
+}
+*::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--color-line-2);
+  border-radius: 4px;
+}
+
+/* ---------- lesson prose ---------- */
+.prose-lesson p {
+  margin: 0 0 1.1rem;
+  line-height: 1.78;
+  color: var(--color-ink-2);
+  font-size: 1.05rem;
+}
+.prose-lesson strong {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+/* ---------- line-mask reveal ---------- */
+.mask-line {
+  display: block;
+  overflow: hidden;
+}
+.mask-line > span {
+  display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track,
+  .cursor-blink,
+  .scanline,
+  .float-soft,
+  .dash-flow {
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
